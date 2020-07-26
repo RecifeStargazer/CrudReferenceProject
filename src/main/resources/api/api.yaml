@@ -100,6 +100,33 @@ paths:
           schema:
             $ref: "#/definitions/ClienteDTO"
             
+  /cadastro/{id}/{nomeCliente}/editarNomeCliente:
+    put:
+      tags:
+      - "Cadastro"
+      summary: "Edita nome cliente"
+      description: "Edita cliente"
+      operationId: "editNomeCliente"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "Id do cliente a ser editado"
+        required: true
+        type: "integer"
+        format: "int64"
+      - name: "nomeCliente"
+        in: "path"
+        description: "Novo nome do cliente"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Perfil alterado com sucesso"
+          schema:
+            $ref: "#/definitions/ClienteDTO"   
+                  
   /cadastro/{id}/cliente/deletar:
     delete:
       tags:

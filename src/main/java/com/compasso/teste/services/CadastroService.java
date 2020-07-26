@@ -18,4 +18,6 @@ public interface CadastroService {
 	ClienteDTO editarCliente(Long id, @Valid ClienteDTO cliente) throws NotFoundException, ParseException;
 	
 	void deleteCliente(Long id) throws NotFoundException;
+
+	ClienteDTO editarNomeCliente(Long id, String nomeCliente) throws NotFoundException;
 }

@@ -84,7 +84,21 @@ public class CadastroApiController implements CadastroApi{
 		}catch(IllegalArgumentException iae) {
 			return new  ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		} catch (NotFoundException e) {
-			return new  ResponseEntity("Cliente com id="+id+"não existe na base de dados",HttpStatus.BAD_REQUEST);
+			return new  ResponseEntity("Cliente com id="+id+"não existe na base de dados",HttpStatus.NOT_FOUND);
 		}		
+	}
+	@Override
+	@RequestMapping(value = "/cadastro/{id}/{nomeCliente}/editarNomeCliente",
+    produces = { "application/json" }, 
+    method = RequestMethod.PUT)
+	public ResponseEntity<ClienteDTO> editNomeCliente(Long id, String nomeCliente) {
+		try {
+			ClienteDTO retorno = cadastroService.editarNomeCliente(id, nomeCliente);
+			return new  ResponseEntity<ClienteDTO>(retorno, HttpStatus.OK);
+		}catch(IllegalArgumentException iae) {
+			return new   ResponseEntity("Verifique as informações enviadas", HttpStatus.BAD_REQUEST);
+		} catch (NotFoundException nfe) {
+			return new  ResponseEntity("Cliente com id="+id+"não existe na base de dados",HttpStatus.NOT_FOUND);
+		}
 	}
 }

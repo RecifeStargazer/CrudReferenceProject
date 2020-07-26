@@ -83,6 +83,24 @@ public class CadastroServiceImpl implements CadastroService {
 		}
 		return retorno;		
 	}
+	
+	@Override
+	public ClienteDTO editarNomeCliente(Long id, String nomeCliente) throws NotFoundException {
+		ClienteDTO retorno = null;
+		if(validarNome(nomeCliente)) {
+			Cliente clienteDomain;
+			try {
+				clienteDomain = clienteRepository.findById(id).get();
+			}catch(Exception e) {
+				throw new NotFoundException("Cliente Não Existe");
+			}
+			clienteDomain.setNome(nomeCliente);
+			Cliente clienteSalvo = clienteRepository.save(clienteDomain);
+			retorno = mapper.map(clienteSalvo, ClienteDTO.class);
+			retorno.setDataDeAniversario(dataAniversarioFromDomain(clienteSalvo.getDataDeNascimento()));
+		}
+		return retorno;		
+	}
 
 	@Override
 	public void deleteCliente(Long id) throws NotFoundException {
@@ -156,6 +174,14 @@ public class CadastroServiceImpl implements CadastroService {
 				return true;
 			};
 		}
+		throw new IllegalArgumentException("Nome inválido");
+		
+	}
+	
+	private boolean validarNome(String nome) {
+			if(!nome.chars().anyMatch(Character::isDigit)) {
+				return true;
+			};
 		throw new IllegalArgumentException("Nome inválido");
 		
 	}
