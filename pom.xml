@@ -127,7 +127,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			<!-- adicionando os arquivos gerados pelo swagger e hibernate ao buildpath -->
+			<!-- adicionando os arquivos gerados pelo swagger ao buildpath -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
