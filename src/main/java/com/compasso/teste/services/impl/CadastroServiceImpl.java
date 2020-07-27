@@ -29,6 +29,10 @@ public class CadastroServiceImpl implements CadastroService {
 
 	private static final String FORMATO_DATA = "dd/MM/yyyy";
 	
+	private static final String MSG_NOT_FOUND = "Registro não encontrado";
+	
+	private static final String MSG_INVALID_ARGUMENT = "Parâmetro invalido";
+	
 	@Autowired
 	ModelMapper mapper;
 	
@@ -54,7 +58,7 @@ public class CadastroServiceImpl implements CadastroService {
 		ClienteDTO retorno = null;
 		if(validarCliente(cliente) && cidadeExiste(cliente.getCidade())) {
 			Cliente clienteDomain = mapper.map(cliente, Cliente.class);
-			clienteDomain.getSexo().toUpperCase();
+			clienteDomain.setSexo(clienteDomain.getSexo().toUpperCase());
 			clienteDomain.setDataDeNascimento(dataAniversarioFromDTO(cliente.getDataDeAniversario()));
 			Cliente clienteSalvo = clienteRepository.save(clienteDomain);
 			retorno = mapper.map(clienteSalvo, ClienteDTO.class);
@@ -71,12 +75,11 @@ public class CadastroServiceImpl implements CadastroService {
 			try {
 				clienteDomain = clienteRepository.findById(id).get();
 			}catch(Exception e) {
-				throw new NotFoundException("Cliente Não Existe");
+				throw new NotFoundException(MSG_NOT_FOUND);
 			}
 			clienteDomain = mapper.map(cliente, Cliente.class);
 			clienteDomain.setDataDeNascimento(dataAniversarioFromDTO(cliente.getDataDeAniversario()));
-			clienteDomain.setId(id);
-			clienteDomain.getSexo().toUpperCase();
+			clienteDomain.setSexo(clienteDomain.getSexo().toUpperCase());
 			Cliente clienteSalvo = clienteRepository.save(clienteDomain);
 			retorno = mapper.map(clienteSalvo, ClienteDTO.class);
 			retorno.setDataDeAniversario(dataAniversarioFromDomain(clienteSalvo.getDataDeNascimento()));
@@ -92,7 +95,7 @@ public class CadastroServiceImpl implements CadastroService {
 			try {
 				clienteDomain = clienteRepository.findById(id).get();
 			}catch(Exception e) {
-				throw new NotFoundException("Cliente Não Existe");
+				throw new NotFoundException(nomeCliente);
 			}
 			clienteDomain.setNome(nomeCliente);
 			Cliente clienteSalvo = clienteRepository.save(clienteDomain);
@@ -107,7 +110,7 @@ public class CadastroServiceImpl implements CadastroService {
 		try {
 			clienteRepository.deleteById(id);
 		}catch(EmptyResultDataAccessException erdae) {
-			throw new NotFoundException("Cliente com id"+id+"Não Existe");
+			throw new NotFoundException(MSG_NOT_FOUND);
 		}
 		
 	}
@@ -152,7 +155,7 @@ public class CadastroServiceImpl implements CadastroService {
 		Cidade cidadeDomain = mapper.map(cidade, Cidade.class);
 		boolean retorno = cidadeRepository.existsById(cidadeDomain.getId());
 		if(!retorno) {
-			throw new NotFoundException("Cidade Não Existe");
+			throw new NotFoundException(MSG_NOT_FOUND);
 		}
 		return cidadeRepository.existsById(cidadeDomain.getId());
 	}
@@ -174,7 +177,7 @@ public class CadastroServiceImpl implements CadastroService {
 				return true;
 			};
 		}
-		throw new IllegalArgumentException("Nome inválido");
+		throw new IllegalArgumentException(MSG_INVALID_ARGUMENT);
 		
 	}
 	
@@ -182,7 +185,7 @@ public class CadastroServiceImpl implements CadastroService {
 			if(!nome.chars().anyMatch(Character::isDigit)) {
 				return true;
 			};
-		throw new IllegalArgumentException("Nome inválido");
+		throw new IllegalArgumentException(MSG_INVALID_ARGUMENT);
 		
 	}
 	
@@ -201,12 +204,12 @@ public class CadastroServiceImpl implements CadastroService {
 		DateFormat dateFormat = new SimpleDateFormat(FORMATO_DATA);
 		dateFormat.setLenient(false);
 		try {
-			dateFormat.parse(cliente.getDataDeAniversario());
+			Date date = dateFormat.parse(cliente.getDataDeAniversario());
 			return true;
 		}catch(ParseException e){
-			return false;
+			throw new IllegalArgumentException(MSG_INVALID_ARGUMENT);
 		}catch(NullPointerException npe) {
-			return false;
+			throw new IllegalArgumentException(MSG_INVALID_ARGUMENT);
 		}
 	}
 }
