@@ -1,4 +1,4 @@
-Esta aplicação é um poc a ser usado como resposta do teste de conhecimetos técnicos do candidato Carlos Swamy Ferraz de Oliveira( 
+Esta aplicação é um poc a ser usado como teste de conhecimetos técnicos do do Carlos Swamy Ferraz de Oliveira( 
 https://github.com/RecifeStargazer)
 
 Para executar a aplicação seguir os seguintes passos:
